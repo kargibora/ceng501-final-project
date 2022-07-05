@@ -10,7 +10,7 @@ In their paper ["Style-Aware Normalized Loss for Improving Arbitrary Style Trans
 The primary goal of this implementation is to train the well-known architectures SANet, LineerTransfer, ADAIn, and GoogleMagenta with a newly defined AST style loss function and demonstrate that this style-aware normalized loss function outperforms the default AST style loss function in every network. We also wish to replicate the authors' results to ensure that the style-aware normalized - or balanced - AST style loss functions behavior is more logical than the default AST style loss function.
 
 ## 1.1. Paper summary
-The authors point out that current AST models face the problem of imbalanced style transferability (IST), in which the stylization intensity of the outputs varies greatly across different styles, and many stylized images suffer from under-stylization, in which only the dominant color is stylized, and over-stylization, in which the content is barely visible. To address this issue, they suggest a balanced AST style loss function that employs Gram-matrix like the default AST style loss function. On the other hand, the proposed method employs a normalizing term that is the theoretical upper bound for the classical AST layerwise style loss - or supremum - to weight estimated style losses. Authors test their proposal on 4 different networks - SANEt, LineerTransfer, ADAIn, and GoogleMagenta.
+The authors point out that current AST models face the problem of imbalanced style transferability (IST), in which the stylization intensity of the outputs varies greatly across different styles, and many stylized images suffer from under-stylization, in which only the dominant color is stylized, and over-stylization, in which the content is barely visible. To address this issue, they suggest a balanced AST style loss function that employs Gram-matrix like the default AST style loss function. On the other hand, the proposed method employs a normalizing term that is the theoretical upper bound for the classical AST layerwise style loss - or supremum - to weight estimated style losses. Authors test their proposal on 4 different networks - SANEt, LineerTransfer, ADAIn [[1]](#1), and GoogleMagenta.
 
 ![](https://github.com/Neroxn/ceng501-final-project/blob/main/images/1.png?raw=true)
 
@@ -79,31 +79,57 @@ In the paper, some part of the algorithms are left unclear. For example the reas
 
 Secondly, the term $N^l$ in the Figure 2.6 is defined as a "that is equal to the product of spatial dimensions of the feature tensor at layer $l$." Spatial dimensions of the feature tensor is unclear and we interpreted this term as $C^2$ where $C$ denotes the channel size of the input at layer $l$ since height and width of the gram matrix of the input at layer $l$ is equal to the channel size $C$. 
 
-Lastly as it can be seen in the Figure 2.3, the classic style losses are nearly $10^9$. Such high style loss can be problematic for many problems so in practice and other litearatures, this term is usually normalized by dividing Gram matrix that is produced for an input by it's dimension. For this reason, instead of using un-normalized version of default AST style loss, we have normalized it for better stability. However since some of the analyzes requires the un-normalized versions, such analyzes is done with the test dataset.
-
+Another issue that paper has can be seen in the Figure 2.3, the classic style losses are nearly $10^9$. Such high style loss can be problematic for many problems so in practice and other litearatures, this term is usually normalized by dividing Gram matrix that is produced for an input by it's dimension. For this reason, instead of using unnormalized version of default AST style loss, we have normalized it for better stability. However since some of the analyzes requires the unnormalized versions, such analyzes is done with the test dataset.
 
 # 3. Experiments and results
 
 ## 3.1. Experimental setup
+As also described in the previous sections, four different architecture is tested with newly defined "balanced AST style loss".
+| &nbsp; | Network Architecture w/ Unique Feature | 
+| --- |  ----------- | 
+| GoogleMagenta | ConvNet with meta-learned instance normalization |
+| AdaIN | Encoder & Decoder with adaptive instance normalization|
+| LinearTransfer | Encoder & Decoder with linear transform matrix |
+| SANet | Encoder & Decoder with style attention|
+ 
+ 
+&nbsp; 
+&nbsp; 
 
+ Content images are from MS-COCO dataset and style images are from Painter by Numbers. Using a pretrained VGG-16 model, $F_{b1}^{r2}$, $F_{b2}^{r2}$, $F_{b3}^{r3}$ and $F_{b4}^{r4}$ are used as encoding layers of style images and  $F_{b3}^{r3}$ is used for content images. For each network architecture, same optimizer that is used in the original setting is used. $\beta$ value that determines the weight between the content and style loss is picked to ensure that style and content losses are similar. Authors also trains 3 model for each network :
+ - Network pretrained with classic style loss
+ - Network trained with classic style
+ - Network trained with balanced style loss
+So a total of 12 models are trained.
+
+However, with this defined setup, there are many problems. 
+
+The first and hardest problem to deal with is they didn't provide any hyperparameter setting. The second problem is it is unclear how the networks are trained. For example author suggest that they have used pretrained models with classic AST style loss however every architecture has it's own style loss function so using a pretrained function with **classic** AST style loss is unclear. For this reason, we used original style loss implementations of the networks for pretrained models.
 Describe the setup of the original paper and whether you changed any settings.
 
+Secondly, in the settings, authors uses VGG-16 model where as SANet, ADAIn and LinearTransfer uses VGG-19 model. As also explained in the section above, the reason why 
+$F_{b1}^{r2}$, $F_{b2}^{r2}$, $F_{b3}^{r3}$ and $F_{b4}^{r4}$ are used as encoding layers is not well-understood. Also using a different encoding layers than the intended encoding layers of the original structure could require some method to change slighthly. To deal with issue, we kept the original encoding layers of the models and only changed the style loss functions of the architectures.
+
+Thirdly, since hyperparameters and β values were not given, hyperparameter search required. However due to the memory and time constraints, this part is skipped. Since training one model usually required ~20 hour, we instead used the hyperparameters of the original implementation. The only slight change is done for the LinearTransform where we picked a β value that weights style loss accordingly. All the hyperparameters that are chosen can be found in the their respective training notebook.
+
+Lastly, due to the time constraints of the project, GoogleMagenta architecture couldn't trained in time. This model can also be added for analysis in the future.
 ## 3.2. Running the code
 
 Explain your code & directory structure and how other people can run it.
 
 ## 3.3. Results
 
-Present your results and compare them to the original paper. Please number your figures & tables as if this is a paper.
-
+Present your results and compare them to the original paper. Please number your figures & tables as if this is a paper. 
 # 4. Conclusion
 
 Discuss the paper in relation to the results in the paper and your results.
 
 # 5. References
-
+<a id="1">[1]</a> 
+https://arxiv.org/abs/1703.06868
 Provide your references here.
 
 # Contact
 
 Provide your names & email addresses and any other info with which people can contact you.
+Bora KARGI - kargibora@gmail.com
