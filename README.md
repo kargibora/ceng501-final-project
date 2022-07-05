@@ -1,6 +1,6 @@
 # Style-Aware Normalized Loss for Improving Arbitrary Style Transfer
 
-This readme file is an outcome of the [CENG501 (Spring 2021)](http://kovan.ceng.metu.edu.tr/~sinan/DL/) project for reproducing a paper without an implementation. See [CENG501 (Spring 2021) Project List](https://github.com/sinankalkan/CENG501-Spring2021) for a complete list of all paper reproduction projects.
+This readme file is an outcome of the [CENG501 (Spring 2021)](http://kovan.ceng.metu.edu.tr/~sinan/DL/) project for reproducing a paper without an implementation. See [CENG501 (Spring 2021) Project List](https://github.com/sinankalkan/CENG501-Spring2022) for a complete list of all paper reproduction projects.
 
 # 1. Introduction
 The fundamental purpose of neural style transfer (NST) is to combine two images - a content image and a style image - so that the output looks like the "content" image painted according to the "style" image. Arbitrary style transfer (AST) tries to synthesize a content image with the style of another image to create a third image that has never been seen before - hence it may be considered as the NST task where the model is an infinite-style model instead of a single-style one since we generate diverse outputs even for the same pair of inputs. 
