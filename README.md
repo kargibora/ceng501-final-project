@@ -1,6 +1,6 @@
 # Style-Aware Normalized Loss for Improving Arbitrary Style Transfer
 
-This readme file is an outcome of the [CENG501 (Spring 2021)](http://kovan.ceng.metu.edu.tr/~sinan/DL/) project for reproducing a paper without an implementation. See [CENG501 (Spring 2021) Project List](https://github.com/sinankalkan/CENG501-Spring2022) for a complete list of all paper reproduction projects.
+This readme file is an outcome of the [CENG501 (Spring 2022)](http://kovan.ceng.metu.edu.tr/~sinan/DL/) project for reproducing a paper without an implementation. See [CENG501 (Spring 2022) Project List](https://github.com/CENG501-Projects/CENG501-Spring2022) for a complete list of all paper reproduction projects.
 
 # 1. Introduction
 The fundamental purpose of neural style transfer (NST) is to combine two images - a content image and a style image - so that the output looks like the "content" image painted according to the "style" image. Arbitrary style transfer (AST) tries to synthesize a content image with the style of another image to create a third image that has never been seen before - hence it may be considered as the NST task where the model is an infinite-style model instead of a single-style one since we generate diverse outputs even for the same pair of inputs. 
@@ -113,8 +113,54 @@ $F_{b1}^{r2}$, $F_{b2}^{r2}$, $F_{b3}^{r3}$ and $F_{b4}^{r4}$ are used as encodi
 Thirdly, since hyperparameters and β values were not given, hyperparameter search required. However due to the memory and time constraints, this part is skipped. Since training one model usually required ~20 hour, we instead used the hyperparameters of the original implementation. The only slight change is done for the LinearTransform where we picked a β value that weights style loss accordingly. All the hyperparameters that are chosen can be found in the their respective training notebook.
 
 Lastly, due to the time constraints of the project, GoogleMagenta architecture couldn't trained in time. This model can also be added for analysis in the future.
-## 3.2. Running the code
 
+| &nbsp; | Optimizer | Learning rate | Learning rate decay | Iteration | Batch size | Style weight | Content | 
+| --- |  ----------- | --------------| -------------------|-----------|-----------|------------|-----------|
+| SaNET |  Adam | 1e-4 | 5e-5 | 160000 | 5 | 3.0 | 1.0 | 
+| AdaIN | Adam | 1e-4 | 5e-5 | 160000 | 8 | 10.0 | 1.0 |
+| LinearTransfer | Adam | 1e-4 | - | 160000 | 8 | 5.0 |1.0|
+
+> Hyperparameters used for training networks. More information about the training parts can be found at `sanet_train.ipynb`, `adain_train.ipynb` and `linear_transfer_train.ipynb`.
+## 3.2. Running the code
+```
+balanced_style_loss
+│   linear_transfer_main.py
+│   linear_transfer_train.ipynb
+│   sanet_main.py
+│   sanet_train.ipynb
+│   adain_main.py
+│   adain_train.ipynb
+│
+│─── images
+│
+│─── libs
+│    │─── functions.py
+│    └─── models_adain.py
+│    └─── models_sanet.py
+│    └─── models_linear_transfer.py
+│  
+│─── contents
+│
+│─── styles
+│
+│─── outputs
+```
+Below can be found explanation of the files:
+- `linear_transfer_main.py` : Testing environment of the LinearTransfer method
+- `linear_transfer_train.ipynb` : Training environment of the LinearTransfer method 
+- `sanet_main.py` : Testing environment of the SaNET method
+- `sanet_train.ipynb` : Training environment of the SaNET method 
+- `adain_main.py` : Testing environment of the AdaIN method
+- `adain_train.ipynb` : Training environment of the AdaIN method 
+- `images/` : Folder for holding the images in the README.md file
+- `libs/functions.py` : Generel utilation functions that is used throughout all models
+- `libs/models_adain.py` : AdaIN spesific functions and structures
+- `libs/models_sanet.py` : SaNET spesific functions and structures
+- `libs/models_linear_transfer.py` : LinearTransfer spesific functions and structures
+- `contents/` : Folder containing example content images C
+- `styles/` : Folder containing example style images S
+- `outputs/` : Folder containing example output images P
+- 
 Explain your code & directory structure and how other people can run it.
 
 ## 3.3. Results
