@@ -79,7 +79,7 @@ In the paper, some part of the algorithms are left unclear. For example the reas
 
 Secondly, the term $N^l$ in the Figure 2.6 is defined as a "that is equal to the product of spatial dimensions of the feature tensor at layer $l$." Spatial dimensions of the feature tensor is unclear and we interpreted this term as $C^2$ where $C$ denotes the channel size of the input at layer $l$ since height and width of the gram matrix of the input at layer $l$ is equal to the channel size $C$. 
 
-Another issue that paper has can be seen in the Figure 2.3, the classic style losses are nearly $10^9$. Such high style loss can be problematic for many problems so in practice and other litearatures, this term is usually normalized by dividing Gram matrix that is produced for an input by it's dimension. For this reason, instead of using unnormalized version of default AST style loss, we have normalized it for better stability. However since some of the analyzes requires the unnormalized versions, such analyzes is done with the test dataset.
+Another issue that paper has can be seen in the Figure 2.3, the classic style losses are nearly $10^9$. Such high style loss can be problematic for many problems so in practice and other litearatures, this term is usually normalized by dividing Gram matrix that is produced for an input by it's dimension. For this reason, instead of using unnormalized version of default AST style loss, we have normalized it for better stability. However since some of the analyzes requires the unnormalized versions, such analyzes is done with the test dataset. 
 
 # 3. Experiments and results
 
@@ -124,13 +124,14 @@ Lastly, due to the time constraints of the project, GoogleMagenta architecture c
 ## 3.2. Running the code
 ```
 balanced_style_loss
-│   linear_transfer_main.py
-│   linear_transfer_train.ipynb
-│   sanet_main.py
-│   sanet_train.ipynb
+│   linear_transfer_main.py  
+│   sanet_main.py 
 │   adain_main.py
-│   adain_train.ipynb
 │
+│─── experiments
+│    │─── linear_transfer_train.ipynb
+│    └─── sanet_train.ipynb
+│    └─── adain_train.ipynb
 │─── images
 │
 │─── libs
@@ -147,11 +148,11 @@ balanced_style_loss
 ```
 Below can be found explanation of the files:
 - `linear_transfer_main.py` : Testing environment of the LinearTransfer method
-- `linear_transfer_train.ipynb` : Training environment of the LinearTransfer method 
 - `sanet_main.py` : Testing environment of the SaNET method
-- `sanet_train.ipynb` : Training environment of the SaNET method 
 - `adain_main.py` : Testing environment of the AdaIN method
-- `adain_train.ipynb` : Training environment of the AdaIN method 
+- `experiments/linear_transfer_train.ipynb` : Training environment of the LinearTransfer method 
+- `experiments/sanet_train.ipynb` : Training environment of the SaNET method
+- `experiments/adain_train.ipynb` : Training environment of the AdaIN method 
 - `images/` : Folder for holding the images in the README.md file
 - `libs/functions.py` : Generel utilation functions that is used throughout all models
 - `libs/models_adain.py` : AdaIN spesific functions and structures
@@ -171,16 +172,53 @@ Present your results and compare them to the original paper. Please number your 
 | &nbsp; | Balanced Loss | Classic Loss | Balanced Loss (Paper) | Classic Loss (Paper)
 | --- |  ----------- | -------------|-------------------------|-------------------|
 | AdaIN | 0.17 | 1.8 x $10^{9}$  |  0.33  | 7.05 x $10^{8}$ |
-| OurAdaIN | 0.57 | 6.32 x $10^{9}$ | 0.43 | 6.62 x $10^{8}$ |
+| OurAdaIN | 0.56 | 6.32 x $10^{9}$ | 0.43 | 6.62 x $10^{8}$ |
 | BalAdaIN | 0.16 | 1.5 x $10^{9}$ | 0.31 | 6.58 x $10^{8}$ |
-|SaNET | 0.17 | 1.8 x $10^{9}$ | 0.28 |5 x $10^{8}$ |
-| OurSaNET | 0.56 | 6.32 x $10^{9}$ | 0.41 |5.25 x $10^{8}$ |
-| BalSaNET | 0.16 | 1.5 x $10^{9}$ | 0.21 | 4.03 x $10^{8}$ |
+|SaNET | 0.48 | 1.4 x $10^{9}$ | 0.28 |5 x $10^{8}$ |
+| OurSaNET | 2.80 | 2.9 x $10^{10}$ | 0.41 |5.25 x $10^{8}$ |
+| BalSaNET | 0.60 | 2.1 x $10^{9}$ | 0.21 | 4.03 x $10^{8}$ |
 | LinearTransformer | 0.21 | 1.2 x $10^{9} $ | 0.33 | 6.11 x $10^{8}$ |
 | OurLT | 2.0 | 3.2 $10^9$ | 0.47 | 6.78 x $10^{8}$ |
 | BalancedLT | 0.19 | 1.0 $10^9$ | 0.25 | 4.27 x $10^{8}$ |
 
-> Models tested for 1000 content,pair images where content comes from ImageNet test set and style images come from PaintByNumber test set. 
+> Table 3.1: Models tested for 2000 content,pair images where content comes from ImageNet test set and style images come from PaintByNumber test set. 
+
+Table above shows the loss calculations of the different models on the ImageNet and PaintByNumber test sets. The loss values are calculated in the `adain_main.py`, `sanet_main.py` and `linear_transfer_main.py` scripts. 
+
+It can be observed that we got a lower balanced loss than the paper versions in some circumstances; however, it is evident that the model we trained performs poorly for the classical loss challenge for all models. One probable explanation for the divergences in model performance is that we did not tune the β hyperparameter in our models. Second, we found some technical issues in our test function that prevented us from training with larger test datasets. All of the challenges encountered in this project can be found under the Problems/Error section.
+
+In Figure 2.3, the authors show the distribution of the classical AST style loss values for four different AST models. It is explained that the main problem with this graph is how counter-intuitive the under-stylization and the over-stylization term means. It should be expected that if a stylized image is over-stylized, it should attain lower style loss, whereas if it is under-stylized, it should attain higher. Figure 3.1 shows the loss distribution of the balanced AST style loss function for different architectures. It can be seen that with this newly proposed method, over-stylized images attain lower loss values, whereas under-stylized images attain higher.
+
+![image](https://user-images.githubusercontent.com/44094497/177618183-fb9f0245-39c0-488b-8212-1cd10544d94d.png)
+> Figure 3.1: Distrubtion of the balanced AST style losses for four different AST methods. 
+
+Figure 3.2 depicts balanced AST style losses for three alternative AST techniques. As can be seen, this result is identical to the one in the study. The distribution is more "equal" in terms of style losses, whereas the distribution in Figure 2.3 was tilted to the left.
+
+![](https://github.com/Neroxn/ceng501-final-project/blob/main/images/balanced_dist.png?raw=true)
+> Figure 3.2: Distribution of the balanced AST style loss we got in our models - SaNET, AdaIN and LinearTransfer respectively.
+
+To show the results of our balanced style loss, we have picked 4 images per each AST method where we picked one low and one high default AST style loss attained content style pairs and one low and one high balanced AST style loss attained content style pairs. The results are shown in figure belows.
+
+![](https://github.com/Neroxn/ceng501-final-project/blob/main/images/AdaIN_results.png?raw=true)
+> Figure 3.3: The top left corner content style pair achieved low balanced AST style loss, whereas the bottom left corner pair achieved low default AST style loss. The pair in the top right corner, on the other hand, achieved high balanced AST style loss, whilst the pair in the bottom right corner achieved high default AST style loss.
+
+Figure 3.3 shows that the low AST style loss pair is over-stylized, while the high AST style loss pair is under-stylized. This outcome is to be expected, and it is the primary rationale for the balanced AST style loss proposal. Also, for each pair, the stylized image produced by the network trained with balanced AST style loss appears to be more accurate than the one produced by the network trained with default AST style loss. For the style transfer challenge, we can definitely state that AST style loss outperforms default AST style loss. More examples are available in the `images` folder.
+
+
+Lastly, to justify why did they use the balancing term in Figure 2.6, the authors show the relation between the balancing term and the classic AST style losses. Using the fact that the relation (Pearson) coefficient is nearly equal to 1, the authors show that the balancing term that they have proposed is an ideal term.
+
+![image](https://user-images.githubusercontent.com/44094497/177620628-032c5590-3b65-4fdf-a954-2c891985b65b.png)
+> Figure 3.4: Calculated pearson coefficients across many models. Authors logically proves that using the supremum as a balancing term is a good idea.
+
+In our model, we tried to replicate the result that the authors have shown. Using the AdaIN and its layers, we plotted whether the balancing term we have used is a good one or not. Unfortunately, our results differ from the original paper result. One possible reason why this occurred can be stated as we have assumed $C^2$ is the spatial dimensions; however, the authors may have used a different term as "spatial dimension" was unclear. Nevertheless, the relation we found in Figure 3.5 between classic AST style loss and its balancing term for each layer that is used also supports that using supremum as the balance term is a good idea.
+
+![adain_relation](https://user-images.githubusercontent.com/44094497/177633802-3cd2c09e-56d8-41a8-a124-47d96942ea82.png)
+>Figure 3.5: Our calculated results for finding whether supremum is a good balancing term or not. The title of each subplot indicates which ReLU layer is used - for example, r11 indicates the first ReLU of the first convolutional block.
+
+
+## 3.4 Problems/Error
+
+
 # 4. Conclusion
 
 Discuss the paper in relation to the results in the paper and your results.
