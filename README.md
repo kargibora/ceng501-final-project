@@ -185,7 +185,7 @@ Present your results and compare them to the original paper. Please number your 
 
 Table above shows the loss calculations of the different models on the ImageNet and PaintByNumber test sets. The loss values are calculated in the `adain_main.py`, `sanet_main.py` and `linear_transfer_main.py` scripts. 
 
-It can be observed that we got a lower balanced loss than the paper versions in some circumstances; however, it is evident that the model we trained performs poorly for the classical loss challenge for all models. One probable explanation for the divergences in model performance is that we did not tune the β hyperparameter in our models. Second, we found some technical issues in our test function that prevented us from training with larger test datasets. All of the challenges encountered in this project can be found under the Problems/Error section.
+It can be observed that we got a lower balanced loss than the paper versions in some circumstances; however, it is evident that the model we trained performs poorly for the classical loss challenge for all models. One probable explanation for the divergences in model performance is that we did not tune the β hyperparameter in our models. Second, we found some technical issues in our test function that prevented us from testing with larger test datasets. This issue is related to the GPU memory that my local laptop has, so to deal with this issue, we limited our test data size to 2000. In future works, this can be solved, and we can extend our project to cover all the test data that we have.
 
 In Figure 2.3, the authors show the distribution of the classical AST style loss values for four different AST models. It is explained that the main problem with this graph is how counter-intuitive the under-stylization and the over-stylization term means. It should be expected that if a stylized image is over-stylized, it should attain lower style loss, whereas if it is under-stylized, it should attain higher. Figure 3.1 shows the loss distribution of the balanced AST style loss function for different architectures. It can be seen that with this newly proposed method, over-stylized images attain lower loss values, whereas under-stylized images attain higher.
 
@@ -216,19 +216,20 @@ In our model, we tried to replicate the result that the authors have shown. Usin
 >Figure 3.5: Our calculated results for finding whether supremum is a good balancing term or not. The title of each subplot indicates which ReLU layer is used - for example, r11 indicates the first ReLU of the first convolutional block.
 
 
-## 3.4 Problems/Error
-
 
 # 4. Conclusion
+In many cases, our findings are identical to those of the original publication. In this project, we constructed a balanced AST style loss and evaluated it across multiple models to demonstrate that the recommended loss function in the paper is an excellent choice for AST tasks. Some of the original paper's conclusions differed from our analyses due to the use of a different set of parameters and unclear descriptions of some of the suggested method's characteristics. Despite these differences, we have demonstrated that the concept of balancing style loss with respect to style image works significantly in solving the imbalanced style transferability problem.
 
-Discuss the paper in relation to the results in the paper and your results.
+As also explained in the section above, due to the time constraint, we have skipped hyperparameter tuning and testing the proposed style loss on the GoogleMagenta architecture. In future works, we can also further test these skipped steps to conclude the balanced AST style loss performance. 
+
+Nevertheless, we see our project as a success in terms of showing what the authors have proposed.
 
 # 5. References
 <a id="1">[1]</a> 
 https://arxiv.org/abs/1703.06868
 Provide your references here.
 
-# Contact
 
-Provide your names & email addresses and any other info with which people can contact you.
+
+# Contact
 Bora KARGI - kargibora@gmail.com
