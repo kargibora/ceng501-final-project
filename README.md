@@ -114,7 +114,7 @@ Thirdly, since hyperparameters and β values were not given, hyperparameter sear
 
 Lastly, due to the time constraints of the project, GoogleMagenta architecture couldn't trained in time. This model can also be added for analysis in the future.
 
-| &nbsp; | Optimizer | Learning rate | Learning rate decay | Iteration | Batch size | Style weight | Content | 
+| &nbsp; | Optimizer | Learning rate | Learning rate decay | Iteration | Batch size | Style weight | Content weight| 
 | --- |  ----------- | --------------| -------------------|-----------|-----------|------------|-----------|
 | SaNET |  Adam | 1e-4 | 5e-5 | 160000 | 5 | 3.0 | 1.0 | 
 | AdaIN | Adam | 1e-4 | 5e-5 | 160000 | 8 | 10.0 | 1.0 |
@@ -160,12 +160,27 @@ Below can be found explanation of the files:
 - `contents/` : Folder containing example content images C
 - `styles/` : Folder containing example style images S
 - `outputs/` : Folder containing example output images P
-- 
+
+
 Explain your code & directory structure and how other people can run it.
 
 ## 3.3. Results
 
 Present your results and compare them to the original paper. Please number your figures & tables as if this is a paper. 
+
+| &nbsp; | Balanced Loss | Classic Loss | Balanced Loss (Paper) | Classic Loss (Paper)
+| --- |  ----------- | -------------|-------------------------|-------------------|
+| AdaIN | 0.17 | 1.8 x $10^{9}$  |  0.33  | 7.05 x $10^{8}$ |
+| OurAdaIN | 0.57 | 6.32 x $10^{9}$ | 0.43 | 6.62 x $10^{8}$ |
+| BalAdaIN | 0.16 | 1.5 x $10^{9}$ | 0.31 | 6.58 x $10^{8}$ |
+|SaNET | 0.17 | 1.8 x $10^{9}$ | 0.28 |5 x $10^{8}$ |
+| OurSaNET | 0.56 | 6.32 x $10^{9}$ | 0.41 |5.25 x $10^{8}$ |
+| BalSaNET | 0.16 | 1.5 x $10^{9}$ | 0.21 | 4.03 x $10^{8}$ |
+| LinearTransformer | 0.21 | 1.2 x $10^{9} $ | 0.33 | 6.11 x $10^{8}$ |
+| OurLT | 2.0 | 3.2 $10^9$ | 0.47 | 6.78 x $10^{8}$ |
+| BalancedLT | 0.19 | 1.0 $10^9$ | 0.25 | 4.27 x $10^{8}$ |
+
+> Models tested for 1000 content,pair images where content comes from ImageNet test set and style images come from PaintByNumber test set. 
 # 4. Conclusion
 
 Discuss the paper in relation to the results in the paper and your results.
